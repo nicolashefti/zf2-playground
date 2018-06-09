@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  php:
+    build: ./docker/php
+    ports:
+      - 80:80
+    volumes:
+      - $PWD/docker/apache/vhost-licences.conf:/etc/apache2/sites-enabled/licences.local.conf
+      - $PWD:/var/www/licences
+    depends_on:
+      - mysql
+    environment:
+      APP_ENV: development
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: licences
+      MYSQL_USER: licences-user
+      MYSQL_PASSWORD: password
+    volumes:
+      - $PWD/data/sql:/data/sql
