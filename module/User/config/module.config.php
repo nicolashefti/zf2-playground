@@ -7,6 +7,11 @@ return [
             'User\Controller\Auth' => 'User\Controller\AuthController',
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            'User\Service\AuthenticationService' => 'User\Factory\AuthenticationServiceFactory'
+        ]
+    ],
     'router' => [
         'routes' => [
             'user' => [
