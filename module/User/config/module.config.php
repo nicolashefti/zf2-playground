@@ -4,24 +4,36 @@ return [
     'controllers' => [
         'invokables' => [
             'User\Controller\User' => 'User\Controller\UserController',
+            'User\Controller\Auth' => 'User\Controller\AuthController',
         ],
     ],
     'router' => [
         'routes' => [
             'user' => [
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => [
-                    'route'    => '/user[/:action][/:id]',
+                    'route' => '/user[/:action][/:id]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
+                        'id' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => 'User\Controller\User',
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
             ],
+            'authentication' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/login',
+                    'defaults' => [
+                        'controller' => 'User\Controller\Auth',
+                        'action' => 'login',
+                    ],
+                ],
+
+            ]
         ],
     ],
     'view_manager' => [
