@@ -1,42 +1,41 @@
 <?php
 
-namespace Album\Controller;
+namespace User\Controller;
 
-use Album\Form\AlbumForm;
-use Album\Model\Album;
+use User\Form\UserForm;
+use User\Model\User;
+use User\Model\UserTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class UserController extends AbstractActionController
 {
-    protected $albumTable;
+    protected $userTable;
 
     public function indexAction()
     {
-        $this->layout()->setVariable('pi', 'ie');
-
-        return new ViewModel(array(
-            'albums' => $this->getAlbumTable()->fetchAll(),
-        ));
+        return new ViewModel([
+            'users' => $this->getUserTable()->fetchAll(),
+        ]);
     }
 
     public function addAction()
     {
-        $form = new AlbumForm();
+        $form = new UserForm();
         $form->get('submit')->setValue('Add');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $album = new Album();
-            $form->setInputFilter($album->getInputFilter());
+            $user = new User();
+            $form->setInputFilter($user->getInputFilter());
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $album->exchangeArray($form->getData());
-                $this->getAlbumTable()->saveAlbum($album);
+                $user->exchangeArray($form->getData());
+                $this->getUserTable()->saveUser($user);
 
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('album');
+                // Redirect to list of users
+                return $this->redirect()->toRoute('user');
             }
         }
 
@@ -49,35 +48,35 @@ class UserController extends AbstractActionController
     {
         $id = (int)$this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('album', array(
+            return $this->redirect()->toRoute('user', [
                 'action' => 'add'
-            ));
+            ]);
         }
 
-        // Get the Album with the specified id.  An exception is thrown
+        // Get the User with the specified id.  An exception is thrown
         // if it cannot be found, in which case go to the index page.
         try {
-            $album = $this->getAlbumTable()->getAlbum($id);
+            $user = $this->getUserTable()->getUser($id);
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('album', array(
+            return $this->redirect()->toRoute('user', array(
                 'action' => 'index'
             ));
         }
 
-        $form = new AlbumForm();
-        $form->bind($album);
+        $form = new UserForm();
+        $form->bind($user);
         $form->get('submit')->setAttribute('value', 'Edit');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($album->getInputFilter());
+            $form->setInputFilter($user->getInputFilter());
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $this->getAlbumTable()->saveAlbum($album);
+                $this->getUserTable()->saveUser($user);
 
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('album');
+                // Redirect to list of users
+                return $this->redirect()->toRoute('user');
             }
         }
 
@@ -91,7 +90,7 @@ class UserController extends AbstractActionController
     {
         $id = (int)$this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('album');
+            return $this->redirect()->toRoute('user');
         }
 
         $request = $this->getRequest();
@@ -100,25 +99,28 @@ class UserController extends AbstractActionController
 
             if ($del == 'Yes') {
                 $id = (int)$request->getPost('id');
-                $this->getAlbumTable()->deleteAlbum($id);
+                $this->getUserTable()->deleteUser($id);
             }
 
-            // Redirect to list of albums
-            return $this->redirect()->toRoute('album');
+            // Redirect to list of users
+            return $this->redirect()->toRoute('user');
         }
 
         return array(
             'id' => $id,
-            'album' => $this->getAlbumTable()->getAlbum($id)
+            'user' => $this->getUserTable()->getUser($id)
         );
     }
 
-    public function getAlbumTable()
+    /**
+     * @return UserTable
+     */
+    public function getUserTable(): UserTable
     {
-        if (!$this->albumTable) {
+        if (!$this->userTable) {
             $sm = $this->getServiceLocator();
-            $this->albumTable = $sm->get('Album\Model\AlbumTable');
+            $this->userTable = $sm->get('User\Model\UserTable');
         }
-        return $this->albumTable;
+        return $this->userTable;
     }
 }

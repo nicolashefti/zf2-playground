@@ -3,7 +3,7 @@
 return [
     'controllers' => [
         'invokables' => [
-            'Album\Controller\Album' => 'Album\Controller\UserController',
+            'Album\Controller\Album' => 'Album\Controller\AlbumController',
         ],
     ],
     'router' => [

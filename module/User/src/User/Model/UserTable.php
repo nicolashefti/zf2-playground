@@ -1,10 +1,10 @@
 <?php
 
-namespace Album\Model;
+namespace User\Model;
 
 use Zend\Db\TableGateway\TableGateway;
 
-class AlbumTable
+class UserTable
 {
     protected $tableGateway;
 
@@ -19,7 +19,7 @@ class AlbumTable
         return $resultSet;
     }
 
-    public function getAlbum($id)
+    public function getUser($id)
     {
         $id = (int)$id;
         $rowset = $this->tableGateway->select(array('id' => $id));
@@ -30,26 +30,27 @@ class AlbumTable
         return $row;
     }
 
-    public function saveAlbum(Album $album)
+    public function saveUser(User $user)
     {
-        $data = array(
-            'artist' => $album->artist,
-            'title' => $album->title,
-        );
+        $data = [
+            'username' => $user->username,
+            'password' => $user->password,
+            'role' => $user->role
+        ];
 
-        $id = (int)$album->id;
+        $id = (int)$user->id;
         if ($id == 0) {
             $this->tableGateway->insert($data);
         } else {
-            if ($this->getAlbum($id)) {
-                $this->tableGateway->update($data, array('id' => $id));
+            if ($this->getUser($id)) {
+                $this->tableGateway->update($data, ['id' => $id]);
             } else {
-                throw new \Exception('Album id does not exist');
+                throw new \Exception('User id does not exist');
             }
         }
     }
 
-    public function deleteAlbum($id)
+    public function deleteUser($id)
     {
         $this->tableGateway->delete(array('id' => (int)$id));
     }

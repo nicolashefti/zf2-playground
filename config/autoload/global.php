@@ -28,6 +28,10 @@ return [
             [
                 'label' => 'Album',
                 'route' => 'album'
+            ],
+            [
+                'label' => 'User',
+                'route' => 'user'
             ]
         ],
     ],

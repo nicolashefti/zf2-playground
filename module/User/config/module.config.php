@@ -3,12 +3,12 @@
 return [
     'controllers' => [
         'invokables' => [
-            'Album\Controller\User' => 'Album\Controller\UserController',
+            'User\Controller\User' => 'User\Controller\UserController',
         ],
     ],
     'router' => [
         'routes' => [
-            'album' => [
+            'user' => [
                 'type'    => 'segment',
                 'options' => [
                     'route'    => '/user[/:action][/:id]',
@@ -26,7 +26,7 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            'album' => __DIR__ . '/../view',
+            'user' => __DIR__ . '/../view',
         ],
     ],
 ];

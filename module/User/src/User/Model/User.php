@@ -1,23 +1,25 @@
 <?php
 
-namespace Album\Model;
+namespace User\Model;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
-class Album implements InputFilterAwareInterface
+class User implements InputFilterAwareInterface
 {
     public $id;
-    public $artist;
-    public $title;
+    public $username;
+    public $password;
+    public $role;
     protected $inputFilter;
 
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
-        $this->artist = (!empty($data['artist'])) ? $data['artist'] : null;
-        $this->title = (!empty($data['title'])) ? $data['title'] : null;
+        $this->username = (!empty($data['username'])) ? $data['username'] : null;
+        $this->password = (!empty($data['password'])) ? $data['password'] : null;
+        $this->role = (!empty($data['role'])) ? $data['role'] : null;
     }
 
     public function getArrayCopy()
@@ -45,7 +47,7 @@ class Album implements InputFilterAwareInterface
             ));
 
             $inputFilter->add(array(
-                'name' => 'artist',
+                'name' => 'username',
                 'required' => true,
                 'filters' => array(
                     array('name' => 'StripTags'),
@@ -64,7 +66,7 @@ class Album implements InputFilterAwareInterface
             ));
 
             $inputFilter->add(array(
-                'name' => 'title',
+                'name' => 'password',
                 'required' => true,
                 'filters' => array(
                     array('name' => 'StripTags'),
@@ -79,6 +81,14 @@ class Album implements InputFilterAwareInterface
                             'max' => 100,
                         ),
                     ),
+                ),
+            ));
+
+            $inputFilter->add(array(
+                'name' => 'role',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'Int'),
                 ),
             ));
 
