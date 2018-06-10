@@ -2,7 +2,7 @@
 
 namespace User\Controller;
 
-use Zend\Authentication\AuthenticationService;
+use User\Service\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AuthController extends AbstractActionController
@@ -18,7 +18,15 @@ class AuthController extends AbstractActionController
             ->setCredential('pass')
             ->authenticate();
 
-        var_dump($result);
+        var_dump($result->getIdentity());
+
+        print_r($authenticationService->getAdapter()->getResultRowObject());
+
+        $authenticationService->getStorage()->write(
+            $authenticationService->getAdapter()->getResultRowObject([
+                'username', 'role'
+            ])
+        );
 
         $this->flashMessenger()->addMessage('Bonjour et bienvenue');
 
