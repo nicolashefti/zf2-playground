@@ -31,7 +31,7 @@ class UserForm extends Form
         ]);
         $this->add([
             'name' => 'role',
-            'type' => 'Number',
+            'type' => 'Text',
             'options' => [
                 'label' => 'Role',
             ],

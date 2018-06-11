@@ -24,26 +24,34 @@ class UserController extends AbstractActionController
         $form = new UserForm();
         $form->get('submit')->setValue('Add');
 
+        var_dump('add');
         $request = $this->getRequest();
         if ($request->isPost()) {
+            var_dump('post');
             $user = new User();
             $form->setInputFilter($user->getInputFilter());
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
                 $user->exchangeArray($form->getData());
+
+                var_dump($user);
                 $this->getUserTable()->saveUser($user);
 
                 // Redirect to list of users
                 return $this->redirect()->toRoute('user');
+            } else {
+                $messages = $form->getMessages();
+
+                foreach ($messages as $message) {
+                    $this->flashMessenger()->addMessage($message);
+                }
             }
         }
 
         return array('form' => $form);
     }
 
-
-    // Add content to this method:
     public function editAction()
     {
         $id = (int)$this->params()->fromRoute('id', 0);
@@ -58,9 +66,9 @@ class UserController extends AbstractActionController
         try {
             $user = $this->getUserTable()->getUser($id);
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('user', array(
+            return $this->redirect()->toRoute('user', [
                 'action' => 'index'
-            ));
+            ]);
         }
 
         $form = new UserForm();
@@ -80,10 +88,10 @@ class UserController extends AbstractActionController
             }
         }
 
-        return array(
+        return [
             'id' => $id,
             'form' => $form,
-        );
+        ];
     }
 
     public function deleteAction()

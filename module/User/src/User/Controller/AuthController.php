@@ -49,6 +49,6 @@ class AuthController extends AbstractActionController
 
         $this->flashMessenger()->addMessage('You have been logged out');
 
-        return new ViewModel();
+        return $this->redirect()->toUrl('/');
     }
 }

@@ -12,7 +12,9 @@ return [
     ],
     'admin' => [
         'Application\Controller\Index\index',
+        'Album\Controller\Album\edit',
         'User\Controller\User\index',
+        'User\Controller\User\add',
         'User\Controller\User\edit',
         'User\Controller\User\delete',
         'User\Controller\Auth\login',

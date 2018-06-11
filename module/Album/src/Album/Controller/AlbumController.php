@@ -4,6 +4,7 @@ namespace Album\Controller;
 
 use Album\Form\AlbumForm;
 use Album\Model\Album;
+use Album\Model\AlbumTable;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -13,8 +14,6 @@ class AlbumController extends AbstractActionController
 
     public function indexAction()
     {
-        $this->layout()->setVariable('pi', 'ie');
-
         return new ViewModel(array(
             'albums' => $this->getAlbumTable()->fetchAll(),
         ));
@@ -43,15 +42,13 @@ class AlbumController extends AbstractActionController
         return array('form' => $form);
     }
 
-
-    // Add content to this method:
     public function editAction()
     {
         $id = (int)$this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('album', array(
+            return $this->redirect()->toRoute('album', [
                 'action' => 'add'
-            ));
+            ]);
         }
 
         // Get the Album with the specified id.  An exception is thrown
@@ -59,9 +56,9 @@ class AlbumController extends AbstractActionController
         try {
             $album = $this->getAlbumTable()->getAlbum($id);
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('album', array(
+            return $this->redirect()->toRoute('album', [
                 'action' => 'index'
-            ));
+            ]);
         }
 
         $form = new AlbumForm();
@@ -81,10 +78,10 @@ class AlbumController extends AbstractActionController
             }
         }
 
-        return array(
+        return [
             'id' => $id,
             'form' => $form,
-        );
+        ];
     }
 
     public function deleteAction()
@@ -113,7 +110,10 @@ class AlbumController extends AbstractActionController
         );
     }
 
-    public function getAlbumTable()
+    /**
+     * @return AlbumTable
+     */
+    public function getAlbumTable(): AlbumTable
     {
         if (!$this->albumTable) {
             $sm = $this->getServiceLocator();
