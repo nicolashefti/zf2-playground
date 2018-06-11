@@ -38,6 +38,17 @@ return [
                     ],
                 ],
 
+            ],
+            'logout' => [
+                'type' => 'segment',
+                'options' => [
+                    'route' => '/logout',
+                    'defaults' => [
+                        'controller' => 'User\Controller\Auth',
+                        'action' => 'logout',
+                    ],
+                ],
+
             ]
         ],
     ],

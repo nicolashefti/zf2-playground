@@ -4,36 +4,51 @@ namespace User\Controller;
 
 use User\Service\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class AuthController extends AbstractActionController
 {
     public function loginAction()
     {
-        /** @var AuthenticationService $authenticationService */
-        $authenticationService = $this->serviceLocator->get('User\Service\AuthenticationService');
+        $request = $this->getRequest();
 
-        $result = $authenticationService
-            ->getAdapter()
-            ->setIdentity('admin')
-            ->setCredential('pass')
-            ->authenticate();
+        if ($request->isPost()) {
+            /** @var AuthenticationService $authenticationService */
+            $authenticationService = $this->serviceLocator->get('User\Service\AuthenticationService');
 
-        var_dump($result->getIdentity());
+            $post = $request->getPost();
 
-        print_r($authenticationService->getAdapter()->getResultRowObject());
+            $result = $authenticationService
+                ->getAdapter()
+                ->setIdentity($post->username)
+                ->setCredential($post->password)
+                ->authenticate();
 
-        $authenticationService->getStorage()->write(
-            $authenticationService->getAdapter()->getResultRowObject([
-                'username', 'role'
-            ])
-        );
+            if ($result->isValid()) {
+                $authenticationService->getStorage()->write(
+                    $authenticationService->getAdapter()->getResultRowObject([
+                        'username', 'role'
+                    ])
+                );
 
-        $this->flashMessenger()->addMessage('Bonjour et bienvenue');
+                $this->flashMessenger()->addMessage('Bonjour et bienvenue');
+            } else {
+                $this->flashMessenger()->addMessage('Invalid credentials');
+            }
+        }
 
+        return new ViewModel();
     }
 
     public function logoutAction()
     {
+        /** @var AuthenticationService $authenticationService */
+        $authenticationService = $this->serviceLocator->get('User\Service\AuthenticationService');
 
+        $authenticationService->clearIdentity();
+
+        $this->flashMessenger()->addMessage('You have been logged out');
+
+        return new ViewModel();
     }
 }
