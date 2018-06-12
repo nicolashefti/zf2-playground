@@ -9,7 +9,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'User\Service\AuthenticationService' => 'User\Factory\AuthenticationServiceFactory'
+            'User\Service\AuthenticationService' => 'User\Service\AuthenticationServiceFactory',
+            'User\Service\Acl' => 'User\Service\AclServiceFactory'
         ]
     ],
     'router' => [
@@ -57,4 +58,9 @@ return [
             'user' => __DIR__ . '/../view',
         ],
     ],
+    'view_helpers' => array(
+        'invokables' => array(
+            'authentication' => 'User\View\Helper\Authentication'
+        )
+    ),
 ];

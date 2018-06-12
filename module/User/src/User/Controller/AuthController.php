@@ -4,7 +4,6 @@ namespace User\Controller;
 
 use User\Service\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 
 class AuthController extends AbstractActionController
 {
@@ -32,12 +31,12 @@ class AuthController extends AbstractActionController
                 );
 
                 $this->flashMessenger()->addMessage('Bonjour et bienvenue');
+
+                return $this->redirect()->toUrl('/');
             } else {
                 $this->flashMessenger()->addMessage('Invalid credentials');
             }
         }
-
-        return new ViewModel();
     }
 
     public function logoutAction()

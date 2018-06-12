@@ -4,7 +4,7 @@ namespace User;
 
 use User\Model\User;
 use User\Model\UserTable;
-use User\Service\AuthenticationService;
+use User\Service\AclService;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -17,68 +17,23 @@ class Module implements ConfigProviderInterface
         return include __DIR__ . '/config/module.config.php';
     }
 
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(MvcEvent $mvcEvent)
     {
-        $this->initAcl($e);
+        /** @var AclService $acl */
+        $aclService = $mvcEvent
+            ->getApplication()
+            ->getServiceManager()
+            ->get('User\Service\Acl');
 
-        $e->getApplication()->getEventManager()->attach('route', array($this, 'checkAcl'));
+        $mvcEvent
+            ->getApplication()
+            ->getEventManager()
+            ->attach('route',  [$aclService, 'checkAcl']);
+//            ->attach('route', [$this,'yolo']);
     }
 
-    public function initAcl(MvcEvent $e)
-    {
-
-        $acl = new \Zend\Permissions\Acl\Acl();
-        $roles = include __DIR__ . '/config/module.acl.roles.php';
-        $allResources = array();
-        foreach ($roles as $role => $resources) {
-
-            $role = new \Zend\Permissions\Acl\Role\GenericRole($role);
-            $acl->addRole($role);
-
-            $allResources = array_merge($resources, $allResources);
-
-            //adding resources
-            foreach ($resources as $resource) {
-                // Edit 4
-                if (!$acl->hasResource($resource))
-                    $acl->addResource(new \Zend\Permissions\Acl\Resource\GenericResource($resource));
-            }
-
-            //adding permissions
-            foreach ($allResources as $resource) {
-                $acl->allow($role, $resource);
-            }
-        }
-
-        //setting to view
-        $e->getViewModel()->acl = $acl;
-    }
-
-    public function checkAcl(MvcEvent $e)
-    {
-        $userRole = 'guest';
-
-        $route = $e->getRouteMatch()->getMatchedRouteName();
-
-        /** @var AuthenticationService $authenticationService */
-        $authenticationService = $e->getApplication()->getServiceManager()->get('User\Service\AuthenticationService');
-
-        if($authenticationService->hasIdentity()) {
-            $storage = $authenticationService->getStorage()->read();
-            $userRole = $storage->role;
-        }
-
-        $controller = $e->getRouteMatch()->getParam('controller');
-        $action = $e->getRouteMatch()->getParam('action');
-
-        $resource = $controller . "\\" . $action;
-
-        if (!$e->getViewModel()->acl->isAllowed($userRole, $resource)) {
-            $response = $e->getResponse();
-            //location to page or what ever
-            $response->getHeaders()->addHeaderLine('Location', $e->getRequest()->getBaseUrl() . '/404');
-            $response->setStatusCode(404);
-        }
+    public function yolo(){
+        die('Yo');
     }
 
     public function getServiceConfig()

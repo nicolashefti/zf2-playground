@@ -1,8 +1,7 @@
 <?php
 
-namespace User\Factory;
+namespace User\Service;
 
-use User\Service\AuthenticationService;
 use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -24,7 +23,7 @@ class AuthenticationServiceFactory implements FactoryInterface
         );
         $authService = new AuthenticationService();
         $authService->setAdapter($dbTableAuthAdapter);
-        $authService->setStorage(new SessionStorage());
+        $authService->setStorage(new SessionStorage('Application\Auth'));
 
         return $authService;
     }
