@@ -13,5 +13,13 @@ if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['RE
 // Setup autoloading
 require 'init_autoloader.php';
 
+$appEnv = getenv('APP_ENV');
+
+// Config
+$appConfig = include 'config/application.config.php';
+if (file_exists('config/development.config.php')  && $appEnv === 'development') {
+    $appConfig = Zend\Stdlib\ArrayUtils::merge($appConfig, include 'config/development.config.php');
+}
+
 // Run the application!
-Zend\Mvc\Application::init(require 'config/application.config.php')->run();
+Zend\Mvc\Application::init($appConfig)->run();

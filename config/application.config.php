@@ -4,9 +4,7 @@ return array(
     'modules' => array(
         'Application',
         'Album',
-        'User',
-        'ZendDeveloperTools',
-        'SanSessionToolbar'
+        'User'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

@@ -9,11 +9,18 @@ class AclService extends Acl
 {
     private $authenticationService;
 
+    /**
+     * AclService constructor.
+     * @param AuthenticationService $authenticationService
+     */
     public function __construct(AuthenticationService $authenticationService)
     {
         $this->authenticationService = $authenticationService;
     }
 
+    /**
+     * @param MvcEvent $e
+     */
     public function checkAcl(MvcEvent $e)
     {
         $userRole = 'guest';

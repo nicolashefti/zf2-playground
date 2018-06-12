@@ -29,7 +29,6 @@ class Module implements ConfigProviderInterface
             ->getApplication()
             ->getEventManager()
             ->attach('route',  [$aclService, 'checkAcl']);
-//            ->attach('route', [$this,'yolo']);
     }
 
     public function yolo(){
