@@ -2,18 +2,19 @@
 $title = 'Login';
 $this->headTitle($title);
 ?>
+    <h1>Login</h1>
 
-<h1>Login</h1>
-
-<form action="/login" method="post">
-    <label>
-        Username
-        <input type="text" name="username">
-    </label>
-    <label>
-        Password <input type="password" name="password">
-    </label>
-    <input type="submit" value="Login">
-</form>
-
-<a href="/logout">Logout</a>
+<?php if ($this->authentication()->hasIdentity()): ?>
+    <a href="/logout">Logout</a>
+<?php else: ?>
+    <form action="/login" method="post">
+        <label>
+            Username
+            <input type="text" name="username">
+        </label>
+        <label>
+            Password <input type="password" name="password">
+        </label>
+        <input type="submit" value="Login">
+    </form>
+<?php endif; ?>

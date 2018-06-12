@@ -1,15 +1,15 @@
 <?php
 
-$title = 'My albums';
+$title = 'My favorite albums';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<p><?php echo $this->layout()->sharedHeadline . $this->layout()->pi ?></p>
-
-<p>
-    <a href="<?php echo $this->url('album', array('action'=>'add'));?>">Add new album</a>
-</p>
+<?php if ($this->acl()->isCurrentUserAllowed('User\Controller\User::add')): ?>
+    <p>
+        <a href="<?php echo $this->url('album', array('action' => 'add')); ?>">Add new user</a>
+    </p>
+<?php endif; ?>
 
 <table class="table">
     <tr>
@@ -19,13 +19,15 @@ $this->headTitle($title);
     </tr>
     <?php foreach ($albums as $album) : ?>
         <tr>
-            <td><?php echo $this->escapeHtml($album->title);?></td>
-            <td><?php echo $this->escapeHtml($album->artist);?></td>
+            <td><?php echo $this->escapeHtml($album->title); ?></td>
+            <td><?php echo $this->escapeHtml($album->artist); ?></td>
             <td>
-                <a href="<?php echo $this->url('album',
-                    array('action'=>'edit', 'id' => $album->id));?>">Edit</a>
-                <a href="<?php echo $this->url('album',
-                    array('action'=>'delete', 'id' => $album->id));?>">Delete</a>
+                <?php if ($this->acl()->isCurrentUserAllowed('Album\Controller\Album::edit')): ?>
+                    <a href="<?php echo $this->url('album', ['action' => 'edit', 'id' => $album->id]); ?>">Edit</a>
+                <?php endif; ?>
+                <?php if ($this->acl()->isCurrentUserAllowed('Album\Controller\Album::delete')): ?>
+                    <a href="<?php echo $this->url('album', ['action' => 'delete', 'id' => $album->id]); ?>">Delete</a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

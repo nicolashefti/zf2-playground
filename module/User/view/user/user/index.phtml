@@ -5,11 +5,11 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<p><?php echo $this->layout()->sharedHeadline . $this->layout()->pi ?></p>
-
-<p>
-    <a href="<?php echo $this->url('user', array('action'=>'add'));?>">Add new user</a>
-</p>
+<?php if ($this->acl()->isCurrentUserAllowed('User\Controller\User::add')): ?>
+    <p>
+        <a href="<?php echo $this->url('user', array('action' => 'add')); ?>">Add new user</a>
+    </p>
+<?php endif; ?>
 
 <table class="table">
     <tr>
@@ -20,12 +20,16 @@ $this->headTitle($title);
     </tr>
     <?php foreach ($users as $user) : ?>
         <tr>
-            <td><?php echo $this->escapeHtml($user->username);?></td>
-            <td><?php echo $this->escapeHtml($user->password);?></td>
-            <td><?php echo $this->escapeHtml($user->role);?></td>
+            <td><?php echo $this->escapeHtml($user->username); ?></td>
+            <td><?php echo $this->escapeHtml($user->password); ?></td>
+            <td><?php echo $this->escapeHtml($user->role); ?></td>
             <td>
-                <a href="<?php echo $this->url('user', ['action'=>'edit', 'id' => $user->id]);?>">Edit</a>
-                <a href="<?php echo $this->url('user', ['action'=>'delete', 'id' => $user->id]);?>">Delete</a>
+                <?php if ($this->acl()->isCurrentUserAllowed('User\Controller\User::edit')): ?>
+                    <a href="<?php echo $this->url('user', ['action' => 'edit', 'id' => $user->id]); ?>">Edit</a>
+                <?php endif; ?>
+                <?php if ($this->acl()->isCurrentUserAllowed('User\Controller\User::delete')): ?>
+                    <a href="<?php echo $this->url('user', ['action' => 'delete', 'id' => $user->id]); ?>">Delete</a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

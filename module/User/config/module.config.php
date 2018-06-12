@@ -60,7 +60,8 @@ return [
     ],
     'view_helpers' => array(
         'invokables' => array(
-            'authentication' => 'User\View\Helper\Authentication'
+            'authentication' => 'User\View\Helper\Authentication',
+            'acl' => 'User\View\Helper\Acl'
         )
     ),
 ];
